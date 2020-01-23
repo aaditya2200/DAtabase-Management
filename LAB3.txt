@@ -1,0 +1,241 @@
+SQL> insert into car
+  2  values ('DL12CJ5461','Ford Figo',2016);
+
+1 row created.
+
+SQL> insert into car
+  2  values ('KA20EP1536','Honda Accord',2009);
+
+1 row created.
+
+SQL> insert into car
+  2  values ('TN12M7786','Hyundai Creta',2017);
+
+1 row created.
+
+SQL> create table person(
+  2  driver_id varchar(30) primary key,
+  3  name varchar(50),
+  4  Address varchar(100));
+SQL> create table car(
+  2  reg_no varchar(30) primary key,
+  3  model varchar(30),
+  4  Year numeric(4,0));
+SQL> create table accident(
+  2  report_number numeric(3) primary key,
+  3  acc_date date,
+  4  Location varchar(50));
+SQL> create table Owns(
+  2  driver_id varchar(30),
+  3  reg_no varchar(20),
+  4  foreign key (driver_id) references person(driver_id),
+  5  foreign key (reg_no) references car(reg_no));
+SQL> create table participated(
+  2  driver_id varchar(30),
+  3  reg_no varchar(20),
+  4  report_number numeric(3,0),
+  5  damage_amount numeric(7,2),
+  6  foreign key (driver_id) references person(driver_id),
+  7  foreign key (report_number) references accident,
+  8  foreign key (reg_no) references car(reg_no),
+  9  primary key (driver_id,reg_no,report_number));
+SQL> insert into person
+  2  values ('atn1966','Amol','Udupi20mhr');
+
+1 row created.
+
+SQL> insert into person
+  2  values ('amh1966','Akshay','Mumbai18klj');
+
+1 row created.
+
+SQL> commit;
+SQL> insert into car
+  2  values ('TS08K7601','Audi A8',2017);
+
+1 row created.
+
+SQL> insert into car
+  2  values ('HYG 4','Porsche Cayenne S',2015);
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select * from car;
+SQL> insert into accident
+  2  values (187,TO_DATE('2020-01-16','yyyy-mm-dd'),'Kundadri');
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> insert into accident
+  2  values (137,TO_DATE('2019-12-08','yyyy-mm-dd'),'Bellari');
+
+1 row created.
+
+SQL> insert into accident
+  2  values (121,TO_DATE('2019-11-09','yyyy-mm-dd'),'Chennai');
+
+1 row created.
+
+SQL> insert into accident
+  2  values (141,TO_DATE('2019-01-09','yyyy-mm-dd'),'Delhi');
+
+1 row created.
+
+SQL> insert into accident
+  2  values (109,TO_DATE('2019-08-09','yyyy-mm-dd'),'Goa');
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select * from accident;
+
+SQL> select * from person;
+
+DRIVER_ID  NAME                      ADDRESS
+---------- ------------------------- -------------------------
+abh1987    Aaditya                   Manipal15704
+abh1088    Akhil                     Manipal15818
+abh1281    Santhosh                  Manipal15907
+atn1966    Amol                      Udupi20mhr
+amh1966    Akshay                    Mumbai18klj
+
+SQL> select * from owns
+  2  ;
+
+DRIVER_ID                      REG_NO
+------------------------------ --------------------
+abh1088                        KA20EP1536
+abh1987                        DL12CJ5461
+
+SQL> select * from car;
+
+REG_NO                         MODEL                                YEAR
+------------------------------ ------------------------------ ----------
+DL12CJ5461                     Ford Figo                            2016
+KA20EP1536                     Honda Accord                         2009
+TN12M7786                      Hyundai Creta                        2017
+TS08K7601                      Audi A8                              2017
+HYG 4                          Porsche Cayenne S                    2015
+
+SQL> insert into owns
+  2  values ('abh1281','TN12M7786');
+
+1 row created.
+
+SQL> insert into owns
+  2  values ('atn1966','TS08K7601');
+
+1 row created.
+
+SQL> insert into owns
+  2  values ('amh1966','HYG 4');
+
+1 row created.
+
+SQL> select * from owns;
+
+DRIVER_ID                      REG_NO
+------------------------------ --------------------
+abh1088                        KA20EP1536
+abh1281                        TN12M7786
+abh1987                        DL12CJ5461
+amh1966                        HYG 4
+atn1966                        TS08K7601
+
+SQL> desc participated;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DRIVER_ID                                 NOT NULL VARCHAR2(30)
+ REG_NO                                    NOT NULL VARCHAR2(20)
+ REPORT_NUMBER                             NOT NULL NUMBER(3)
+ DAMAGE_AMOUNT                                      NUMBER(7,2)
+
+SQL> select * from accident;
+
+REPORT_NUMBER ACC_DATE  LOCATION
+------------- --------- --------------------------------------------------
+          187 16-JAN-20 Kundadri
+          137 08-DEC-19 Bellari
+          121 09-NOV-19 Chennai
+          141 09-JAN-19 Delhi
+          109 09-AUG-19 Goa
+
+SQL> insert into participated
+  2  values ('abh1987','DL12CJ5461',187,43267.90);
+
+1 row created.
+
+SQL> insert into participated
+  2  values ('abh1281','KA20EP',137,40000.00);
+insert into participated
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (CC3102.SYS_C00206750) violated - parent key
+not found
+
+
+SQL> values ('abh1281','KA20EP1536',137,40000.00);
+SP2-0734: unknown command beginning "values ('a..." - rest of line ignored.
+SQL> insert into participated
+  2  values ('abh1281','KA20EP1536',137,40000.00);
+
+1 row created.
+
+SQL> insert into participated
+  2  values ('abh1088','TN12M7786',121,30000.00);
+
+1 row created.
+
+SQL> insert into participated
+  2  values ('amh1966','HYG 4',141,30000.00);
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> insert into participated
+  2  values ('atn1966','TS08k7601',109,30000.00);
+insert into participated
+*
+ERROR at line 1:
+ORA-02291: integrity constraint (CC3102.SYS_C00206750) violated - parent key
+not found
+
+
+SQL> values ('atn1966','TS08K7601',109,30000.00);
+SP2-0734: unknown command beginning "values ('a..." - rest of line ignored.
+SQL> insert into participated
+  2  values ('atn1966','TS08K7601',109,30000.00);
+
+1 row created.
+
+SQL> update participated
+  2  set damage_amount = 25000
+  3  where report_number = 141;
+
+1 row updated.
+
+SQL> select * from participated;
+
+DRIVER_ID                      REG_NO               REPORT_NUMBER DAMAGE_AMOUNT
+------------------------------ -------------------- ------------- -------------
+abh1987                        DL12CJ5461                     187       43267.9
+abh1281                        KA20EP1536                     137         40000
+abh1088                        TN12M7786                      121         30000
+amh1966                        HYG 4                          141         25000
+atn1966                        TS08K7601                      109         30000
+
+SQL>

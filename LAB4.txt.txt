@@ -1,0 +1,251 @@
+SQL> select count(*) from accident natural join participated natural join owns
+  2  where extract (year from acc_date) = 2008;
+
+SQL> select model,count (model) from car,participated
+  2  where car.reg_no = participated.reg_no
+  3  group by model;
+
+SQL> select name as OWNER,damage_amount as TOTAL_AMT,report_number as ACC_NUM from person,participated
+  2  where person.driver_id = participated.driver_id order by TOTAL_AMT desc;
+
+SQL> select name,driver_id from person  natural join participated,
+  2  accident as t,
+  3  accident as s,
+  4  where extract (year from t.acc_date) - (select extract (year from s.acc_date)) = 0
+  5  and participated.report_number = t.report_number;
+
+SQL> create table customer(
+  2  cust# numeric(3,0) primary key,
+  3  cname varchar(25),
+  4  city varchar(25));
+create table customer(
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+SQL> desc customer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUST#                                     NOT NULL NUMBER(4)
+ CNAME                                              VARCHAR2(25)
+ CITY                                               VARCHAR2(25)
+
+SQL> select * from customer;
+
+no rows selected
+
+SQL> desc orders;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ORDER#                                    NOT NULL NUMBER(3)
+ ODATE                                              DATE
+ CUST#                                              NUMBER(4)
+ ORDAMT                                             NUMBER(6,2)
+
+SQL> desc item;
+ERROR:
+ORA-04043: object item does not exist
+
+
+SQL> create table item(
+  2  item# numeric(3,0) primary key,
+  3  unitprice numeric(5,1));\
+  4
+SQL> create table item(
+  2  item# numeric(3,0) primary key,
+  3  unitprice numeric(5,1));
+
+Table created.
+
+SQL> create table order_items(
+  2  order# numeric(2,0) primary key,
+  3  item# numeric(3,0),
+  4  qty numeric(2,0),
+  5  foreign key (item#) references (item.item#));
+foreign key (item#) references (item.item#))
+                               *
+ERROR at line 5:
+ORA-00903: invalid table name
+
+
+SQL> create table order_items(
+  2  order# numeric(2,0) primary key,
+  3  item# numeric(3,0),
+  4  qty numeric(2,0),
+  5  foreign key (item#) references (item));
+foreign key (item#) references (item))
+                               *
+ERROR at line 5:
+ORA-00903: invalid table name
+
+
+SQL> create table order_items(
+  2  order# numeric(2,0) primary key,
+  3  item# numeric(3,0),
+  4  qty numeric(2,0),
+  5  foreign key (item#) references item);
+
+Table created.
+
+SQL> create tavle shipment(
+  2  order# numeric(3,0),
+  3  warehouse# numeric(2,0)
+  4  ,
+  5  shipdate date,
+  6  foreign key (order#) references orders(order#),
+  7  primary key(order#));
+create tavle shipment(
+       *
+ERROR at line 1:
+ORA-00901: invalid CREATE command
+
+
+SQL> create table shipment(
+  2  order# numeric(3,0),
+  3  warehouse# numeric(2,0)
+  4  ,
+  5  shipdate date,
+  6  foreign key (order#) references orders(order#),
+  7  primary key(order#));
+
+Table created.
+
+SQL> create table warehouse(
+  2  warehouse# numeric(2,0),
+  3  city varchar(25),
+  4  foreign key (warehouse#) references shipment,
+  5  primary key (warehouse#));
+
+Table created.
+
+Commit complete.
+
+SQL> insert into warehouse
+  2  values (50,'Udupi');
+
+1 row created.
+
+SQL> insert into warehouse
+  2  values (51,'New Delhi');
+
+1 row created.
+
+SQL> insert into warehouse
+  2  values (52,'Madurai');
+
+1 row created.
+
+SQL> insert into warehouse
+  2  values (53,'Tirupati');
+
+1 row created.
+
+SQL> insert into warehouse
+  2  values (54,'Mangaluru');
+
+1 row created.
+
+SQL> insert into shipment
+  2  values (12,50,TO_DATE('2020-1-21','yyyy-mm-dd'));
+
+1 row created.
+
+SQL> insert into shipment
+  2  values (17,51,TO_DATE('2020-1-12','yyyy-mm-dd'));
+
+1 row created.
+
+SQL> insert into shipment
+  2  values (7,52,TO_DATE('2020-1-2','yyyy-mm-dd'));
+
+1 row created.
+
+SQL> insert into shipment
+  2  values (8,53,TO_DATE('2020-1-6','yyyy-mm-dd'));
+
+1 row created.
+
+SQL> insert into shipment
+  2  values (9,54,TO_DATE('2020-1-8','yyyy-mm-dd'));
+
+1 row created.
+
+
+     CUST# CNAME                     CITY
+---------- ------------------------- -------------------------
+         1 Amol                      Udupi
+         2 Aaditya                   New Delhi
+         3 Santhosh                  Madurai
+         4 Trinay                    Tirupati
+         5 Prajyoth                  Mangaluru
+
+SQL> select * from orders;
+
+    ORDER# ODATE          CUST#     ORDAMT
+---------- --------- ---------- ----------
+        12 12-SEP-19          1        200
+        17 11-SEP-19          2        160
+         9 09-SEP-19          3        400
+         8 09-SEP-19          4        400
+         7 09-SEP-19          5        100
+
+SQL> select * from item;
+
+     ITEM#  UNITPRICE
+---------- ----------
+        23      234.5
+        21        235
+        13        500
+        15        530
+         5        241
+
+SQL> select * from order_items;
+
+    ORDER#      ITEM#        QTY
+---------- ---------- ----------
+        12         21          8
+         7          5          2
+        17         13          2
+         9         15          1
+         8         23          1
+
+SQL> select * from shipment;
+
+    ORDER# WAREHOUSE# SHIPDATE
+---------- ---------- ---------
+        12         50 21-JAN-20
+        17         51 12-JAN-20
+         7         52 02-JAN-20
+         8         53 06-JAN-20
+         9         54 08-JAN-20
+
+SQL> select * from warehouse;
+
+WAREHOUSE# CITY
+---------- -------------------------
+        50 Udupi
+        51 New Delhi
+        52 Madurai
+        53 Tirupati
+        54 Mangaluru
+
+
+SQL> select cname from customer,orders
+  2  where customer.cust# = orders.cust#
+  3  and odate like TO_DATE('2019-9-9','yyyy-mm-dd');
+
+SQL> select item#,qty from order_items;
+SQL> select  MAX(qty) from order_items;
+SQL> select max(count(odate)) from orders group by odate;
+
+SQL> select odate
+  2  from orders
+  3  group by odate
+  4  having count(odate) =
+  5  (select max(count(odate)) from orders group by odate);
+
+ODATE
+---------
+09-SEP-19
+

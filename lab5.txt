@@ -1,0 +1,475 @@
+
+SQL> create table student(
+  2  regno varchar(20),
+  3  name varchar(35),
+  4  major varchar(20),
+  5  bdate date,
+  6  primary key(regno));
+
+Table created.
+
+SQL> create table course(
+  2  course# int,
+  3  cname varchar(30),
+  4  dept varchar(30),
+  5  primary key(course#));
+
+Table created.
+
+SQL> create table enroll(
+  2  regno varchar(20),
+  3  course# int,
+  4  foreign key (regno) references student,
+  5  foreign key (course#) references course,
+  6  primary key (regno,course#));
+
+Table created.
+
+SQL> create table text(
+  2  book_isbn int primary key,
+  3  booktitle varchar(30),
+  4  publisher varchar(30),
+  5  author varchar(30));
+
+Table created.
+
+SQL> create table book_adoption(
+  2  course# int,
+  3  sem int,
+  4  book_isbn int,
+  5  foreign key (book_isbn) references text,
+  6  foreign key (course#) references course,
+  7  primary key (book_isbn,course#));
+
+Table created.
+
+SQL> insert into regno
+  2  values ('3102','Aaditya','Networking',TO_DATE('2019-5-6','yyyy-mm-dd'));
+insert into regno
+            *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> insert into student
+  2  values ('3102','Aaditya','Networking',TO_DATE('2019-5-6','yyyy-mm-dd'));
+
+1 row created.
+
+SQL> insert into regno
+  2  ;
+
+*
+ERROR at line 2:
+ORA-00926: missing VALUES keyword
+
+
+SQL> insert into student
+  2  values ('3106','Vaibhav','Formula Manipal',TO_DATE('2000-8-1','yyyy-mm-dd'));
+
+1 row created.
+
+SQL> insert into student
+  2  values ('3116','Trinay','CSE',TO_DATE('2000-9-3','yyyy-mm-dd'));
+
+1 row created.
+
+SQL> insert into student
+  2  values ('3001','Richi','CCE',TO_DATE('1999-9-3','yyyy-mm-dd'));
+
+1 row created.
+
+SQL> insert into student
+  2  values ('3004','Amol','CCE',TO_DATE('2000-10-3','yyyy-mm-dd'));
+
+1 row created.
+
+SQL> select * from student;
+
+REGNO                NAME                                MAJOR
+-------------------- ----------------------------------- --------------------
+BDATE
+---------
+3102                 Aaditya                             Networking
+06-MAY-19
+
+3106                 Vaibhav                             Formula Manipal
+01-AUG-00
+
+3116                 Trinay                              CSE
+03-SEP-00
+
+
+REGNO                NAME                                MAJOR
+-------------------- ----------------------------------- --------------------
+BDATE
+---------
+3001                 Richi                               CCE
+03-SEP-99
+
+3004                 Amol                                CCE
+03-OCT-00
+
+
+SQL> alter table student
+  2  modify name varchar(30);
+
+Table altered.
+
+SQL> select * from student;
+
+REGNO                NAME                           MAJOR
+-------------------- ------------------------------ --------------------
+BDATE
+---------
+3102                 Aaditya                        Networking
+06-MAY-19
+
+3106                 Vaibhav                        Formula Manipal
+01-AUG-00
+
+3116                 Trinay                         CSE
+03-SEP-00
+
+
+REGNO                NAME                           MAJOR
+-------------------- ------------------------------ --------------------
+BDATE
+---------
+3001                 Richi                          CCE
+03-SEP-99
+
+3004                 Amol                           CCE
+03-OCT-00
+
+
+SQL> alter table
+  2  student
+  3  modify major varchar(30);
+
+Table altered.
+
+SQL> select * from student;
+
+REGNO                NAME
+-------------------- ------------------------------
+MAJOR                          BDATE
+------------------------------ ---------
+3102                 Aaditya
+Networking                     06-MAY-19
+
+3106                 Vaibhav
+Formula Manipal                01-AUG-00
+
+3116                 Trinay
+CSE                            03-SEP-00
+
+
+REGNO                NAME
+-------------------- ------------------------------
+MAJOR                          BDATE
+------------------------------ ---------
+3001                 Richi
+CCE                            03-SEP-99
+
+3004                 Amol
+CCE                            03-OCT-00
+
+
+SQL> alter table student
+  2  modify name varchar(20);
+
+Table altered.
+
+SQL> select * from student;
+
+REGNO                NAME                 MAJOR
+-------------------- -------------------- ------------------------------
+BDATE
+---------
+3102                 Aaditya              Networking
+06-MAY-19
+
+3106                 Vaibhav              Formula Manipal
+01-AUG-00
+
+3116                 Trinay               CSE
+03-SEP-00
+
+
+REGNO                NAME                 MAJOR
+-------------------- -------------------- ------------------------------
+BDATE
+---------
+3001                 Richi                CCE
+03-SEP-99
+
+3004                 Amol                 CCE
+03-OCT-00
+
+
+SQL> insert into course
+  2  values (1244,'OOP','ICT');
+
+1 row created.
+
+SQL> insert into course
+  2  values (1214,'DSD&CO','ICT');
+Enter value for co: null;
+old   2: values (1214,'DSD&CO','ICT')
+new   2: values (1214,'DSDnull;','ICT')
+
+1 row created.
+
+SQL> delete from course
+  2  where course# = 1214;
+
+1 row deleted.
+
+SQL> insert into course
+  2  values (1214,'DSD','ICT');
+
+1 row created.
+
+SQL> insert into course
+  2  values (1253,'Data Mining','ICT');
+
+1 row created.
+
+SQL> insert into course
+  2  values (1153,'Maths-1','MATHS');
+
+1 row created.
+
+SQL> insert into course
+  2  values (1053,'Maths-2','MATHS');
+
+1 row created.
+
+SQL> select * from course;\
+  2
+SQL> select * from course;
+
+   COURSE# CNAME                          DEPT
+---------- ------------------------------ ------------------------------
+      1244 OOP                            ICT
+      1214 DSD                            ICT
+      1253 Data Mining                    ICT
+      1153 Maths-1                        MATHS
+      1053 Maths-2                        MATHS
+
+SQL> insert into enroll
+  2  values ('3102',1253);
+
+1 row created.
+
+SQL> insert into enroll
+  2  values ('3106',1244);
+
+1 row created.
+
+SQL> insert into enroll
+  2  values ('3116',1214);
+
+1 row created.
+
+SQL> insert into enroll
+  2  values ('3001',1153);
+
+1 row created.
+
+SQL> insert into enroll
+  2  values ('3004',1053);
+
+1 row created.
+
+SQL> select * from enroll
+  2  ;
+
+REGNO                   COURSE#
+-------------------- ----------
+3001                       1153
+3004                       1053
+3102                       1253
+3106                       1244
+3116                       1214
+
+SQL> insert into text
+  2  values (110,'Physics For Engineers','ABC','Resnick');
+
+1 row created.
+
+SQL> insert into text
+  2  values (111,'Maths For Engineers','JKL','Grewal');
+
+1 row created.
+
+SQL> insert into text
+  2  values (131,'Data structures in C++','JKL','Sahni');
+
+1 row created.
+
+SQL> insert into text
+  2  values (141,'Operating Systems','ABC','Silberschatz');
+
+1 row created.
+
+SQL> insert into text
+  2  values (142,'TCP/IP','trs','Ferouzan');
+
+1 row created.
+
+SQL> select * from text;
+
+ BOOK_ISBN BOOKTITLE                      PUBLISHER
+---------- ------------------------------ ------------------------------
+AUTHOR
+------------------------------
+       110 Physics For Engineers          ABC
+Resnick
+
+       111 Maths For Engineers            JKL
+Grewal
+
+       131 Data structures in C++         JKL
+Sahni
+
+
+ BOOK_ISBN BOOKTITLE                      PUBLISHER
+---------- ------------------------------ ------------------------------
+AUTHOR
+------------------------------
+       141 Operating Systems              ABC
+Silberschatz
+
+       142 TCP/IP                         trs
+Ferouzan
+
+
+SQL> alter table text
+  2  modify booktitle varchar(25);
+
+Table altered.
+
+SQL> select * from text;
+
+ BOOK_ISBN BOOKTITLE                 PUBLISHER
+---------- ------------------------- ------------------------------
+AUTHOR
+------------------------------
+       110 Physics For Engineers     ABC
+Resnick
+
+       111 Maths For Engineers       JKL
+Grewal
+
+       131 Data structures in C++    JKL
+Sahni
+
+
+ BOOK_ISBN BOOKTITLE                 PUBLISHER
+---------- ------------------------- ------------------------------
+AUTHOR
+------------------------------
+       141 Operating Systems         ABC
+Silberschatz
+
+       142 TCP/IP                    trs
+Ferouzan
+
+
+SQL> alter table text
+  2  modify author varchar(25);
+
+Table altered.
+
+SQL> select * from text;
+
+ BOOK_ISBN BOOKTITLE                 PUBLISHER
+---------- ------------------------- ------------------------------
+AUTHOR
+-------------------------
+       110 Physics For Engineers     ABC
+Resnick
+
+       111 Maths For Engineers       JKL
+Grewal
+
+       131 Data structures in C++    JKL
+Sahni
+
+
+ BOOK_ISBN BOOKTITLE                 PUBLISHER
+---------- ------------------------- ------------------------------
+AUTHOR
+-------------------------
+       141 Operating Systems         ABC
+Silberschatz
+
+       142 TCP/IP                    trs
+Ferouzan
+
+
+SQL> alter table text
+  2  modify publisher varchar(10);
+
+Table altered.
+
+SQL>
+SQL> select * from text;
+
+ BOOK_ISBN BOOKTITLE                 PUBLISHER  AUTHOR
+---------- ------------------------- ---------- -------------------------
+       110 Physics For Engineers     ABC        Resnick
+       111 Maths For Engineers       JKL        Grewal
+       131 Data structures in C++    JKL        Sahni
+       141 Operating Systems         ABC        Silberschatz
+       142 TCP/IP                    trs        Ferouzan
+
+SQL> commit;
+
+Commit complete.
+
+SQL> insert into book_adoption
+  2  values (1244,3,110);
+
+1 row created.
+
+SQL> insert into book_adoption
+  2  values (1214,3,131);
+
+1 row created.
+
+SQL> insert into book_adoption
+  2  values (1053,1,111);
+
+1 row created.
+
+SQL> insert into book_adoption
+  2  values (1153,2,141);
+
+1 row created.
+
+SQL> insert into book_adoption
+  2  values (1253,2,142);
+
+1 row created.
+
+SQL> select * from book_adoption;
+
+   COURSE#        SEM  BOOK_ISBN
+---------- ---------- ----------
+      1244          3        110
+      1214          3        131
+      1053          1        111
+      1153          2        141
+      1253          2        142
+
+SQL> select distinct course.cname from course,text,book_adoption
+  2  where course.course# = book_adoption.course#
+  3  and course.course# = (select book_adoption.course# from book_adoption group by book_adoption.course# having count(book_adoption.course#) > 1);
+
+SQL> select distinct student.name from student,enroll
+  2  where student.regno not in
+  3  (select enroll.regno from enroll);
+codd rules

@@ -1,0 +1,114 @@
+CREATE OR REPLACE TRIGGER diplay_driver
+
+AFTER UPDATE OR INSERT ON participated
+
+FOR EACH ROW
+
+Begin
+
+FOR name1 in (SELECT name from person where person.driver_id=:new.driver_id)
+
+LOOP
+
+DBMS_OUTPUT.PUT_LINE(name1.name);
+
+END LOOP;
+
+END;
+/
+
+
+
+
+CREATE OR REPLACE FUNCTION no_of_accidents(yr IN varchar)
+
+return number AS tot_accd number;
+
+BEGIN
+
+select count(distinct report_number) into tot_accd from accident
+
+where extract(year from accd_date)=yr;
+
+RETURN tot_accd;
+
+END;
+/
+
+
+
+
+
+CREATE OR REPLACE PROCEDURE display_amount(did IN number, yr IN varchar)
+
+AS tot number;
+
+BEGIN 
+
+SELECT sum(damage_amount) into tot 
+from accident, participated
+
+Where participated.driver_id=did and participated.report_number=accident.report_number and extract(year from accd_date)=yr;
+
+DBMS_OUTPUT.PUT_LINE(tot);
+
+END;
+/
+
+
+
+
+CREATE OR REPLACE PROCEDURE return_location(n IN varchar2)
+
+IS
+
+rno INTEGER;
+ad DATE;
+da INTEGER;
+
+BEGIN
+
+select report_number INTO rno from participated natural join accident where location = n;
+select accd_date INTO ad from participated natural join accident where location = n;
+
+select damage_amount INTO da from participated natural join accident where location = n;
+DBMS_OUTPUT.PUT_LINE('Report Number: '||rno||' Accident Date: '||ad||' Damage Amount: '||da||'.');
+
+END;
+/
+
+
+
+
+CREATE OR REPLACE PROCEDURE abcd
+AS
+c int;
+BEGIN
+c = countNum 2008;
+DBMS_OUTPUT.PUT_LINE('Count: '||c);
+END;
+ /
+
+
+SQL> CREATE OR REPLACE TRIGGER print_name
+AFTER INSERT OR UPDATE ON participated
+ FOR EACH ROW
+BEGIN
+ FOR I IN
+ (SELECT driver_id FROM participated WHERE participated.REPORT_NUMBER=:NEW.REPORT_NUMBER)
+ LOOP
+  DBMS_OUTPUT.PUT_LINE('Name: '||i.driver_id)
+  ;
+  END LOOP;
+  END;
+  /
+
+
+
+select *
+from
+   user_errors
+where
+   type = 'TRIGGER'
+and
+   name = 'PRINT_NAME';
